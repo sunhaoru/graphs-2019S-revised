@@ -135,7 +135,7 @@ public class Graph {
    */
   public Graph(String fName) throws Exception {
     this();
-    this.readEdges(fName);
+    this.readGraph(fName);
   } // Graph
 
   // +----------------------+----------------------------------------
@@ -216,7 +216,7 @@ public class Graph {
   } // dumpWithNames(PrintWriter)
 
   /**
-   * Save the graph in the form expected by readEdges.
+   * Save the graph in the form expected by readGraph.
    */
   public void save(String fname) throws Exception {
     PrintWriter file = new PrintWriter(new File(fname));
@@ -225,7 +225,7 @@ public class Graph {
   } // save(String)
 
   /**
-   * Dump the graph in the form expected by readEdges.
+   * Dump the graph in the form expected by readGraph.
    */
   public void write(PrintWriter pen) {
     for (int vertex = 0; vertex < vertices.length; vertex++) {
@@ -487,10 +487,11 @@ public class Graph {
   } // addVertex()
 
   /**
-   * Read a bunch of edges from a file. Throws an exception if any of the lines
-   * have the wrong form.
+   * Read a a graph from a file. Throws an exception if any of the lines
+   * have the wrong form.  If there are edges in the current graph,
+   * may overwrite them with a new weight.
    */
-  public void readEdges(String fname) throws Exception {
+  public void readGraph(String fname) throws Exception {
     BufferedReader lines = new BufferedReader(new FileReader(fname));
     // Since the only way to determine if no lines are left in a
     // BufferedReader is to see if readLine() throws an exception,
@@ -510,7 +511,7 @@ public class Graph {
 
     } // try/catch
     lines.close();
-  } // readEdges()
+  } // readGraph()
 
   /**
    * Remove an edge. If the edge does not exist, does nothing.
