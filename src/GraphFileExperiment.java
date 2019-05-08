@@ -9,7 +9,7 @@ public class GraphFileExperiment {
     PrintWriter pen = new PrintWriter(System.out, true);
     // A small graph so that we can force it to expand.
     Graph g = new UndirectedGraph();
-    g.readEdges(args[0]);
+    g.readGraph(args[0]);
     g.dump(pen);
     g.dumpWithNames(pen);
     g.write(pen);
