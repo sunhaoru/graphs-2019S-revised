@@ -25,11 +25,11 @@ public class Graph {
   // +-------+
 
   /*
-   * We implement our graphs using adjacency lists. For each vertex, v, we store
-   * a list of edges from that vertex.
+   * We implement our graphs using adjacency lists. For each vertex, v, we store a list of edges
+   * from that vertex.
    *
-   * For convenience, you can refer to vertices by number or by name. However,
-   * it is more efficient to refer to them by number.
+   * For convenience, you can refer to vertices by number or by name. However, it is more efficient
+   * to refer to them by number.
    */
 
   // +-----------+---------------------------------------------------
@@ -68,14 +68,12 @@ public class Graph {
   int numEdges;
 
   /**
-   * The vertices in the graph. The edges from vertex v are stored in
-   * vertices[v].
+   * The vertices in the graph. The edges from vertex v are stored in vertices[v].
    */
   List<Edge>[] vertices;
 
   /**
-   * The names of the vertices. The name of vertex v is stored in
-   * vertexNames[v].
+   * The names of the vertices. The name of vertex v is stored in vertexNames[v].
    */
   String[] vertexNames;
 
@@ -90,14 +88,12 @@ public class Graph {
   Queue<Integer> unusedVertices;
 
   /**
-   * The numbers of the vertices. The vertex with name n is given by
-   * vertexNumbers.get(n).
+   * The numbers of the vertices. The vertex with name n is given by vertexNumbers.get(n).
    */
   HashMap<String, Integer> vertexNumbers;
 
   /**
-   * The version of the graph. (Essentially, the number of times we've modified
-   * the graph.)
+   * The version of the graph. (Essentially, the number of times we've modified the graph.)
    */
   long version;
 
@@ -130,8 +126,8 @@ public class Graph {
   } // Graph(int)
 
   /**
-   * Create a new graph, reading the edges from a file. Edges must have the form
-   * FROM TO WEIGHT, with one edge per line.
+   * Create a new graph, reading the edges from a file. Edges must have the form FROM TO WEIGHT,
+   * with one edge per line.
    */
   public Graph(String fName) throws Exception {
     this();
@@ -143,8 +139,8 @@ public class Graph {
   // +----------------------+
 
   /**
-   * Given a vertex number, get the corresponding vertex name. If there is no
-   * corresponding vertex name, returns null;
+   * Given a vertex number, get the corresponding vertex name. If there is no corresponding vertex
+   * name, returns null;
    */
   public String vertexName(int vertexNumber) {
     if (!validVertex(vertexNumber)) {
@@ -155,8 +151,8 @@ public class Graph {
   } // vertexName(int)
 
   /**
-   * Given a vertex name, get the corresponding vertex number. If there is no
-   * corresponding vertex number, returns -1.
+   * Given a vertex name, get the corresponding vertex number. If there is no corresponding vertex
+   * number, returns -1.
    */
   public int vertexNumber(String vertexName) {
     Integer result = this.vertexNumbers.get(vertexName);
@@ -207,8 +203,8 @@ public class Graph {
     for (int vertex = 0; vertex < vertices.length; vertex++) {
       if (validVertex(vertex)) {
         for (Edge e : vertices[vertex]) {
-          pen.println("  " + vertexName(e.from()) + " --" + e.weight() + "-> "
-              + vertexName(e.to()));
+          pen.println(
+              "  " + vertexName(e.from()) + " --" + e.weight() + "-> " + vertexName(e.to()));
         } // for()
       } // if
     } // for
@@ -231,8 +227,7 @@ public class Graph {
     for (int vertex = 0; vertex < vertices.length; vertex++) {
       if (validVertex(vertex)) {
         for (Edge e : vertices[vertex]) {
-          pen.println(vertexName(e.from()) + " " + vertexName(e.to()) + " "
-              + e.weight());
+          pen.println(vertexName(e.from()) + " " + vertexName(e.to()) + " " + e.weight());
         } // for()
       } // if
     } // for
@@ -420,13 +415,53 @@ public class Graph {
     }; // new Iterator<Integer>
   } // vertices()
 
+  /**
+   * shortestPath (Dijkstra's algorithm)
+   * 
+   * @param source
+   * @param sink
+   * @return
+   */
+  public int shortestPath(int source, int sink) {
+    int[] distances = new int[this.numVertices];
+    for (int i = 0; i < this.numVertices; i++) {
+      distances[i] = Integer.MAX_VALUE;
+    }
+    distances[source] = 0;
+    int current = sink;
+    while (!isMarked(sink, this.MARK02)) {
+      int minEdge = Integer.MAX_VALUE;
+      for (int i = 0; i < distances.length; i++) {
+        if (!isMarked(i, this.MARK02)) {
+          if (distances[i] < minEdge) {
+            current = i;
+            minEdge = distances[i];
+          } // if
+        } // if
+      } // for: find the smallest unmarked distance
+      if (minEdge == Integer.MAX_VALUE) {
+        return -1;
+      } else {
+        mark(current, this.MARK02);
+        List<Edge> edges = this.vertices[current];
+        for (Edge edge : edges) {
+          if (distances[current] + edge.weight() < distances[edge.to()]) {
+            distances[edge.to()] = distances[current] + edge.weight();
+          } // if
+        } // for
+      } // else
+    } // while
+    return distances[sink];
+  }// shortestPath(int source, int sink);
+
+
   // +----------+----------------------------------------------------
   // | Mutators |
   // +----------+
 
   /**
-   * Add an edge between two vertices. If the edge already exists, replace it.
-   * If the vertices are invalid, throws an exception.
+   * Add an edge between two vertices. If the edge already exists, replace it. If the vertices are
+   * invalid, throws an exception.
    */
   public void addEdge(int from, int to, int weight) throws Exception {
     if (!validVertex(from) || !validVertex(to)) {
@@ -449,8 +484,8 @@ public class Graph {
   } // addEdge(int, int, int)
 
   /**
-   * Add an edge between two vertices. If the edge already exists, replace it.
-   * if the vertices are invalid, throws an exception.
+   * Add an edge between two vertices. If the edge already exists, replace it. if the vertices are
+   * invalid, throws an exception.
    */
   public void addEdge(String from, String to, int weight) throws Exception {
     addEdge(this.vertexNumber(from), this.vertexNumber(to), weight);
@@ -487,9 +522,8 @@ public class Graph {
   } // addVertex()
 
   /**
-   * Read a a graph from a file. Throws an exception if any of the lines
-   * have the wrong form.  If there are edges in the current graph,
-   * may overwrite them with a new weight.
+   * Read a a graph from a file. Throws an exception if any of the lines have the wrong form. If
+   * there are edges in the current graph, may overwrite them with a new weight.
    */
   public void readGraph(String fname) throws Exception {
     BufferedReader lines = new BufferedReader(new FileReader(fname));
@@ -707,9 +741,8 @@ public class Graph {
   } // expand()
 
   /**
-   * Compare an expected version to the current version. Die if they do not
-   * match. (Used to implement the traditional "fail fast" policy for
-   * iterators.)
+   * Compare an expected version to the current version. Die if they do not match. (Used to
+   * implement the traditional "fail fast" policy for iterators.)
    */
   private void failFast(long expectedVersion) {
     if (this.version != expectedVersion) {
@@ -721,8 +754,7 @@ public class Graph {
    * Determine if a vertex is valid.
    */
   private boolean validVertex(int vertex) {
-    return ((vertex >= 0) && (vertex < this.vertices.length)
-        && (this.vertexNames[vertex] != null));
+    return ((vertex >= 0) && (vertex < this.vertices.length) && (this.vertexNames[vertex] != null));
   } // validVertex
 
   /**
@@ -736,8 +768,7 @@ public class Graph {
   } // newVertexNumber()
 
   /**
-   * Get a vertex number for a vertex name, even if the name is not already in
-   * the graph.
+   * Get a vertex number for a vertex name, even if the name is not already in the graph.
    */
   private int safeVertexNumber(String vertex) throws Exception {
     int num = this.vertexNumber(vertex);
